@@ -1,11 +1,9 @@
 import express from 'express';
-import { createNewUser } from '../controllers/userController.js';
+import { createNewUser, login } from '../controllers/userController.js';
 
 const userRouter = express.Router();
 
-userRouter.get('/', (req, res) => {
-  res.send("Rota para entrar na conta");
-})
+userRouter.get('/', login);
 
 userRouter.post('/', createNewUser);
 
