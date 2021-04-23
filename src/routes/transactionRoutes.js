@@ -1,7 +1,6 @@
 import express from 'express';
 const transactionRouter = express.Router();
 
-
 transactionRouter.post('/', (req, res) => {
   res.send("Rota para criar nova transação");
 })
