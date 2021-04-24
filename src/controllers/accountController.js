@@ -4,12 +4,12 @@ import User from "../models/userModel.js";
 export const createNewAccount = async (req, res) => {
   console.log(req.body);
   try {
-    const { email, bankName } = req.body;
+    const { email, bankName, number } = req.body;
     const userDocument = await User.findOne({ email });
     const { _id, firstName } = userDocument;
     const userId = _id;
 
-    const accountDocument = await Account.create({ bankName, userId });
+    const accountDocument = await Account.create({ bankName, userId, number });
 
     await User.updateOne({ _id: userId },{$push: {accounts:accountDocument}});
 

@@ -10,6 +10,10 @@ const accountSchema = mongoose.Schema({
     required: true,
     default: "corrente"
   },
+  number: {
+    type: Number,
+    required: true,
+  },
   balance: {
     type: Number,
     required: true,
