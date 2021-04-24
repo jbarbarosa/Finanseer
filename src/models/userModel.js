@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import Account from './accountModel.js';
 
 const userSchema = mongoose.Schema({
   firstName: {
@@ -20,7 +21,11 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     select: false
-  }
+  },
+  accounts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account'
+  }]
 }, {
   timestamps: true
 });

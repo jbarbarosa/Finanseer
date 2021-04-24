@@ -17,4 +17,8 @@ transactionRouter.get('/:client', (req, res) => {
   res.send("Rota para ver transações de um cliente");
 })
 
+transactionRouter.post('/status/:id', (req, res) => {
+  res.send("Rota para mudar status de uma transação");
+})
+
 export default transactionRouter;

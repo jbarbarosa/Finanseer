@@ -12,7 +12,6 @@ export const createNewUser = async (req, res) => {
 
     const user = await User.create(req.body);
     user.password = "password encrypted and stored";
-    console.log("Senha criada")
     return res.status(200).send({ user, token: getToken({ id: user.id }) });
 
   } catch (err) {
