@@ -43,6 +43,6 @@ export const alterTransactionStatus = async (req, res) => {
     const result = await changeTransactionStatus(transactionId, isConfirmed);
     if (result) return res.send("Status da transação alterado com sucesso"+"\n"+result);
   } catch {
-    res.status(400).send("Erro, certifique-se de que a conta e a confirmação foram enviadas");
+    res.status(400).send("Erro, certifique-se de que a conta e a confirmação foram enviadas corretamente");
   }
 }
