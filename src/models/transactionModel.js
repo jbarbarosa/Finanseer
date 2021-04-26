@@ -17,7 +17,7 @@ const transactionSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
-  }
+  },
 }, {
   timestamps: true
 });
