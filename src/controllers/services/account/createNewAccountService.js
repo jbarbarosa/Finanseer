@@ -1,5 +1,5 @@
-import Account from "../../models/accountModel.js";
-import User from "../../models/userModel.js";
+import Account from "../../../models/accountModel.js";
+import User from "../../../models/userModel.js";
 
 const createNewAccountService = async (email, bankName, number) => {
   try {

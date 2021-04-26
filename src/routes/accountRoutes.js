@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNewAccount } from '../controllers/accountController.js';
+import { accountStatus, createNewAccount, updateAccount } from '../controllers/accountController.js';
 import { authenticator } from '../middlewares/auth.js';
 const accountRouter = express.Router();
 
@@ -7,15 +7,11 @@ accountRouter.use(authenticator);
 
 accountRouter.post('/', createNewAccount);
 
-accountRouter.put('/', (req, res) => {
-  res.send("Rota para alterar uma conta bancária");
-});
+accountRouter.put('/', updateAccount);
 
-accountRouter.delete('/', (req, res) => {
-  res.send("Rota para desativar conta bancária");
-});
+accountRouter.put('/status', accountStatus);
 
-accountRouter.get('/:account', (req, res) => {
+accountRouter.get('/balance', (req, res) => {
   res.send("Rota para exibir saldo de uma conta");
 });
 
