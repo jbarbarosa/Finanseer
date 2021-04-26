@@ -3,7 +3,8 @@ import {
   newTransaction,
   alterTransaction,
   removeTransaction,
-  alterTransactionStatus
+  alterTransactionStatus,
+  clientTransactions
 } from '../controllers/transactionController.js';
 
 const transactionRouter = express.Router();
@@ -12,11 +13,9 @@ transactionRouter.post('/', newTransaction);
 
 transactionRouter.put('/', alterTransaction);
 
-transactionRouter.delete('/', removeTransaction)
+transactionRouter.delete('/', removeTransaction);
 
-transactionRouter.get('/all-transactions', (req, res) => {
-  res.send("Rota para ver transações de um cliente");
-})
+transactionRouter.get('/my-transactions', clientTransactions);
 
 transactionRouter.post('/status/', alterTransactionStatus);
 

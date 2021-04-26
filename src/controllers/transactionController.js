@@ -1,3 +1,4 @@
+import Account from "../models/accountModel.js";
 import Transaction from "../models/transactionModel.js";
 import changeTransactionStatus from "./services/transaction/changeTransactionStatus.js";
 import createNewTransactionService from "./services/transaction/createNewTransactionService.js";
@@ -24,7 +25,7 @@ export const alterTransaction = async (req, res) => {
   if (req.body.amount) query.amount = req.body.amount;
   if (req.body.isInbound) query.isInbound = req.body.isInbound;
 
-  const result = await Transaction.updateOne({_id: transactionId}, query, {
+  const result = await Transaction.updateOne({ _id: transactionId }, query, {
     new: true
   });
   return res.send(result);
@@ -45,4 +46,17 @@ export const alterTransactionStatus = async (req, res) => {
   } catch {
     res.status(400).send("Erro, certifique-se de que a conta e a confirmação foram enviadas corretamente");
   }
+}
+
+export const clientTransactions = async (req, res) => {
+  const { clientId } = req.body;
+  const tmpArray = [];
+  const clientAccounts = await Account.find({ userId: clientId });
+  clientAccounts.map(acc => {
+    tmpArray.push(acc.transactions)
+  })
+  // transforma o array de arrays em um só array
+  const transactionsArray = [].concat.apply([], tmpArray);
+  const allTransactions = await Transaction.find({ _id: transactionsArray })
+  res.status(200).send(allTransactions);
 }
