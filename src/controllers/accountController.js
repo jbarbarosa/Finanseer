@@ -1,5 +1,6 @@
 import createNewAccountService from "./services/account/createNewAccountService.js";
 import Account from "../models/accountModel.js";
+import Transaction from "../models/transactionModel.js";
 
 export const createNewAccount = async (req, res) => {
   try {
@@ -39,4 +40,31 @@ export const accountStatus = async (req, res) => {
   } catch (err) {
     res.status(400).send("Erro ao alterar estado da conta");
   }
+}
+
+export const accountBalance = async (req, res) => {
+  const { accountId } = req.body;
+  const tmpArray = [];
+  const account = await Account.findById(accountId);
+  const accountTransactions = account.transactions;
+  if (!accountTransactions) return res.status(400).send("Erro, transações não encontradas")
+  accountTransactions.map(acc => {
+    tmpArray.push(acc.transactions)
+  })
+
+  const transactions = await Transaction.find({
+    $and: [
+      { _id: accountTransactions },
+      { isConfirmed: true }
+    ]})
+  let balance = 0
+  transactions.map(transaction => {
+    if (transaction.isInbound == true) {
+      balance += transaction.amount;
+    } else {
+      balance -= transaction.amount;
+    }
+  })
+  console.log(transactions);
+  return res.status(200).send("Balanço: "+balance);
 }
