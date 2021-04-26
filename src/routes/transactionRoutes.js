@@ -1,12 +1,10 @@
 import express from 'express';
-import { newTransaction } from '../controllers/transactionController.js';
+import { newTransaction, alterTransaction } from '../controllers/transactionController.js';
 const transactionRouter = express.Router();
 
 transactionRouter.post('/', newTransaction);
 
-transactionRouter.put('/', (req, res) => {
-  res.send("Rota para alterar uma transação");
-})
+transactionRouter.put('/', alterTransaction);
 
 transactionRouter.delete('/', (req, res) => {
   res.send("Rota para remover transação");
