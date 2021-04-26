@@ -1,7 +1,8 @@
-import Transaction from "../../../models/transactionModel";
+import Transaction from "../../../models/transactionModel.js";
 
 const changeTransactionStatus = async (transactionId, isConfirmed) => {
-  Transaction.findByIdAndUpdate(transactionId, isConfirmed);
+  const result = await Transaction.findByIdAndUpdate(transactionId, isConfirmed);
+  return result
 }
 
 export default changeTransactionStatus;

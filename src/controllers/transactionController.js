@@ -1,4 +1,5 @@
 import Transaction from "../models/transactionModel.js";
+import changeTransactionStatus from "./services/transaction/changeTransactionStatus.js";
 import createNewTransactionService from "./services/transaction/createNewTransactionService.js";
 import removeTransactionService from "./services/transaction/removeTransactionService.js";
 
@@ -40,6 +41,7 @@ export const alterTransactionStatus = async (req, res) => {
   try {
     const { transactionId, isConfirmed } = req.body;
     const result = await changeTransactionStatus(transactionId, isConfirmed);
+    if (result) return res.send("Status da transação alterado com sucesso"+"\n"+result);
   } catch {
     res.status(400).send("Erro, certifique-se de que a conta e a confirmação foram enviadas");
   }

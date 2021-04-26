@@ -1,5 +1,11 @@
 import express from 'express';
-import { newTransaction, alterTransaction, removeTransaction } from '../controllers/transactionController.js';
+import {
+  newTransaction,
+  alterTransaction,
+  removeTransaction,
+  alterTransactionStatus
+} from '../controllers/transactionController.js';
+
 const transactionRouter = express.Router();
 
 transactionRouter.post('/', newTransaction);
@@ -12,8 +18,6 @@ transactionRouter.get('/all-transactions', (req, res) => {
   res.send("Rota para ver transações de um cliente");
 })
 
-transactionRouter.post('/status/', (req, res) => {
-  res.send("Rota para mudar status de uma transação");
-})
+transactionRouter.post('/status/', alterTransactionStatus);
 
 export default transactionRouter;
