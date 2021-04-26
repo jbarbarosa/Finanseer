@@ -1,7 +1,7 @@
 import Account from "../../../models/accountModel.js"
 import Transaction from "../../../models/transactionModel.js"
 
-export const createNewTransactionService = async (accountId, amount, isInbound) => {
+const createNewTransactionService = async (accountId, amount, isInbound) => {
   const account = await Account.findOne({ _id: accountId });
 
   if (!account) {
@@ -17,3 +17,5 @@ export const createNewTransactionService = async (accountId, amount, isInbound) 
   console.log("Transaction "+result)
   return result;
 }
+
+export default createNewTransactionService;

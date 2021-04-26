@@ -1,5 +1,6 @@
 import Transaction from "../models/transactionModel.js";
-import { createNewTransactionService } from "./services/transaction/createNewTransactionService.js";
+import createNewTransactionService from "./services/transaction/createNewTransactionService.js";
+import removeTransactionService from "./services/transaction/removeTransactionService.js";
 
 export const newTransaction = async (req, res) => {
   try {
@@ -26,4 +27,20 @@ export const alterTransaction = async (req, res) => {
     new: true
   });
   return res.send(result);
+}
+
+export const removeTransaction = async (req, res) => {
+  const { transactionId } = req.body;
+  const result = await removeTransactionService(transactionId);
+  if (!result) res.status(400).send("Erro: não foi possível remover esta transação")
+  return res.send("Transação removida com sucesso");
+}
+
+export const alterTransactionStatus = async (req, res) => {
+  try {
+    const { transactionId, isConfirmed } = req.body;
+    const result = await changeTransactionStatus(transactionId, isConfirmed);
+  } catch {
+    res.status(400).send("Erro, certifique-se de que a conta e a confirmação foram enviadas");
+  }
 }
