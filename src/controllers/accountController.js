@@ -1,6 +1,7 @@
 import createNewAccountService from "./services/account/createNewAccountService.js";
 import Account from "../models/accountModel.js";
 import Transaction from "../models/transactionModel.js";
+import User from "../models/userModel.js";
 
 export const createNewAccount = async (req, res) => {
   try {
@@ -67,4 +68,16 @@ export const accountBalance = async (req, res) => {
   })
   console.log(transactions);
   return res.status(200).send("Balanço: "+balance);
+}
+
+export const getAllUserAccounts = async (req, res) => {
+  if (!req.body.email) return res.status(400).send("Informe o email do usuario");
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  const userId = user._id;
+  if (!userId) return res.status(400).send("Usuário não encontrado");
+
+  const accounts = await Account.find({ userId });
+  if (!accounts) return res.status(200).send("Nenhuma conta encontrada"); // 200 pois a query foi bem sucedida, apenas não encontrou contas registradas neste usuário.
+  return res.status(200).send(accounts);
 }
