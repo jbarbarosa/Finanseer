@@ -4,7 +4,7 @@ const updateTransactionService = async (transactionId, query) => {
   const update = await Transaction.updateOne({ _id: transactionId }, query, {
     new: true
   });
-  if (update) return [200, 'Transação modificada com sucesso']
+  if (update.ok == 1) return [200, 'Transação modificada com sucesso']
   return [400, 'Erro: Transação não pôde ser modificada'];
 }
 
