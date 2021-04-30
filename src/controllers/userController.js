@@ -1,19 +1,23 @@
-import User from '../models/userModel.js';
+import createNewUserService from './services/user/createNewUserService.js';
+import loginService from './services/user/loginService.js';
+import findUserByEmail from './services/user/findUserByEmail.js';
 import { getToken } from '../middlewares/auth.js'
-import bcrypt from 'bcryptjs'
 
 export const createNewUser = async (req, res) => {
   console.log(req.body);
-
   try {
     const { email } = req.body;
-
-    if (await User.findOne({ email })) return res.status(400).send("Usuário já existe");
-
-    const user = await User.create(req.body);
-    user.password = "password encrypted and stored";
-    return res.status(200).send({ user, token: getToken({ id: user.id }) });
-
+    const user = await findUserByEmail(email);
+    console.log(user);
+    if (user) return res.status(400).send("Usuário já existe");
+    const { password, firstName, lastName } = req.body;
+    const result = await createNewUserService(email, password, firstName, lastName);
+    if (result[0] === 200) {
+      const user = result[1];
+      return res.status(200).send({token: getToken({ id: user.id })});
+    } else {
+      return res.status(400).send(result[0]);
+    }
   } catch (err) {
     return res.status(400).send(`Erro ao registrar: ${ err }`);
   }
@@ -22,16 +26,16 @@ export const createNewUser = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select('+password');
-
+    const user = await findUserByEmail(email, true);
     if (!user) return res.status(404).send("Erro: usuário não encontrado");
-    if (!await bcrypt.compare(password, user.password))
-      return res.send("Erro: senha incorreta");
-    
-    user.password = "passwords matched";
-    const token = getToken({ id: user.id });
-
-    return res.send(`Login realizado. Bem vindo, ${ user.firstName }.\nToken:${ token }`);
+    const result = await loginService(user, password);
+    if (result[0] === 200) {
+      const token = getToken({ id: user.id });
+      return res.status(result[0]).send(token);
+    } else {
+      const token = 'Não autorizado';
+      return res.status(result[0]).send(token);
+    }
   } catch(err) {
     return res.status(400).send(`Erro: ${ err }`);
   }

@@ -1,15 +1,16 @@
 import createNewAccountService from "./services/account/createNewAccountService.js";
-import Account from "../models/accountModel.js";
-import Transaction from "../models/transactionModel.js";
-import User from "../models/userModel.js";
+import findAccountBalanceService from "./services/account/findAccountBalanceService.js";
+import getAllUserAccountsService from "./services/account/getAllUserAccountsService.js";
+import updateAccountService from "./services/account/updateAccountService.js";
+import updateAccountStatusService from "./services/account/updateAccountStatusService.js";
 
 export const createNewAccount = async (req, res) => {
   try {
     const { email, bankName, number } = req.body;
     if (!email || !bankName || !number) return res
-      .status(400).send(`Erro: dados incompletos.`)
+      .status(400).send(`Erro: dados incompletos.`);
     const result = await createNewAccountService(email, bankName, number);
-    if (result != 400) return res.status(200).send(result);
+    res.status(result[0]).send(result[1]);
   } catch (err) {
     return res.status(400).send(`Erro ao registrar conta: ${ err }`);
   }
@@ -23,11 +24,8 @@ export const updateAccount = async (req, res) => {
     if (req.body.typeOfAccount) query.typeOfAccount = req.body.typeOfAccount;
     if (req.body.number) query.number = req.body.number;
     if (req.body.balance) query.balance = req.body.balance;
-
-    const result = await Account.updateOne({_id: accountId}, query, {
-      new: true
-    });
-    return res.send(result);
+    const result = await updateAccountService(accountId, query);
+    return res.status(result[0]).send(result[1]);
   } catch(err) {
     return err
   }
@@ -36,48 +34,31 @@ export const updateAccount = async (req, res) => {
 export const accountStatus = async (req, res) => {
   try {
     const { accountId, status } = req.body;
-    const result = await Account.findByIdAndUpdate(accountId, { active : status });
-    if (result) res.status(200).send("Estado alterado");
+    const result = await updateAccountStatusService(accountId, status);
+    return res.status(result[0]).send(result[1]);
   } catch (err) {
     res.status(400).send("Erro ao alterar estado da conta");
   }
 }
 
 export const accountBalance = async (req, res) => {
-  const { accountId } = req.body;
-  const tmpArray = [];
-  const account = await Account.findById(accountId);
-  const accountTransactions = account.transactions;
-  if (!accountTransactions) return res.status(400).send("Erro, transações não encontradas")
-  accountTransactions.map(acc => {
-    tmpArray.push(acc.transactions)
-  })
-
-  const transactions = await Transaction.find({
-    $and: [
-      { _id: accountTransactions },
-      { isConfirmed: true }
-    ]})
-  let balance = 0
-  transactions.map(transaction => {
-    if (transaction.isInbound == true) {
-      balance += transaction.amount;
-    } else {
-      balance -= transaction.amount;
-    }
-  })
-  console.log(transactions);
-  return res.status(200).send("Balanço: "+balance);
+  try {
+    const { accountId } = req.body;
+    const result = await findAccountBalanceService(accountId);
+    const balance = `${result[1]}` // um curioso bug acontece se result[1] for igual a um código HTTP (200, 400, 404 etc.), portanto convém garantir a conversão para uma string 
+    return res.status(result[0]).send(balance);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
 }
 
 export const getAllUserAccounts = async (req, res) => {
   if (!req.body.email) return res.status(400).send("Informe o email do usuario");
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  const userId = user._id;
-  if (!userId) return res.status(400).send("Usuário não encontrado");
-
-  const accounts = await Account.find({ userId });
-  if (!accounts) return res.status(200).send("Nenhuma conta encontrada"); // 200 pois a query foi bem sucedida, apenas não encontrou contas registradas neste usuário.
-  return res.status(200).send(accounts);
+  try {
+    const { email } = req.body;
+    const result = await getAllUserAccountsService(email);
+    return res.status(result[0]).send(result[1]);
+  } catch (err) {
+    return res.status(400).send(`Erro: ${err}`);
+  }
 }

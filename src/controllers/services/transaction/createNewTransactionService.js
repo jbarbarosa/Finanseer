@@ -3,19 +3,14 @@ import Transaction from "../../../models/transactionModel.js"
 
 const createNewTransactionService = async (accountId, amount, isInbound) => {
   const account = await Account.findOne({ _id: accountId });
+  if (!account) return [404, 'Conta não encontrada'];
 
-  if (!account) {
-    const message = "Conta não encontrada";
-    return message
-  }
-
-  const { _id } = account;
   const transaction = await Transaction.create({ accountId, amount, isInbound });
-  const result = await Account
+  const update = await Account
     .updateOne({ _id: accountId },{$push: {transactions:transaction}});
   
-  console.log("Transaction "+result)
-  return result;
+  if (update) return [200, 'Nova transação adicionada.']
+  return [400, 'Não foi possível adiconar uma nova transação'];
 }
 
 export default createNewTransactionService;

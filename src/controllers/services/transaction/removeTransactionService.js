@@ -1,9 +1,9 @@
 import Transaction from "../../../models/transactionModel.js"
 
 const removeTransactionService = async (transactionId) => {
-  console.log("\nTransactionId: "+transactionId);
-  const result = await Transaction.findOneAndDelete({ _id: transactionId })
-  return result
+  const update = await Transaction.findOneAndDelete({ _id: transactionId })
+  if (update) return [200, 'Transação removida'];
+  return [400, 'Transação não pôde ser removida'];
 }
 
 export default removeTransactionService;
