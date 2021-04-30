@@ -2,15 +2,16 @@ import express from 'express';
 import { accountStatus, createNewAccount, updateAccount, getAllUserAccounts } from '../controllers/accountController.js';
 import { accountBalance } from '../controllers/accountController.js';
 import { authenticator } from '../middlewares/auth.js';
+import { checkIfMatch } from '../middlewares/checkIfMatch.js';
 const accountRouter = express.Router();
 
 accountRouter.use(authenticator);
 
-accountRouter.post('/', createNewAccount);
+accountRouter.post('/', checkIfMatch, createNewAccount);
 
-accountRouter.put('/', updateAccount);
+accountRouter.put('/', checkIfMatch, updateAccount);
 
-accountRouter.put('/status', accountStatus);
+accountRouter.put('/status', checkIfMatch, accountStatus);
 
 accountRouter.get('/balance', accountBalance);
 

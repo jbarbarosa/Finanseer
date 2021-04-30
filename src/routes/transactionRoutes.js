@@ -6,17 +6,21 @@ import {
   alterTransactionStatus,
   clientTransactions
 } from '../controllers/transactionController.js';
+import { authenticator } from '../middlewares/auth.js';
+import { checkIfMatch } from '../middlewares/checkIfMatch.js';
 
 const transactionRouter = express.Router();
 
-transactionRouter.post('/', newTransaction);
+transactionRouter.use(authenticator);
 
-transactionRouter.put('/', alterTransaction);
+transactionRouter.post('/', checkIfMatch, newTransaction);
 
-transactionRouter.delete('/', removeTransaction);
+transactionRouter.put('/', checkIfMatch, alterTransaction);
+
+transactionRouter.delete('/', checkIfMatch, removeTransaction);
 
 transactionRouter.get('/my-transactions', clientTransactions);
 
-transactionRouter.post('/status/', alterTransactionStatus);
+transactionRouter.post('/status/', checkIfMatch, alterTransactionStatus);
 
 export default transactionRouter;

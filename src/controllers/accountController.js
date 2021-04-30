@@ -6,10 +6,11 @@ import updateAccountStatusService from "./services/account/updateAccountStatusSe
 
 export const createNewAccount = async (req, res) => {
   try {
-    const { email, bankName, number } = req.body;
-    if (!email || !bankName || !number) return res
+    const { bankName, number } = req.body;
+    const id = req.id;
+    if (!id || !bankName || !number) return res
       .status(400).send(`Erro: dados incompletos.`);
-    const result = await createNewAccountService(email, bankName, number);
+    const result = await createNewAccountService(id, bankName, number);
     res.status(result[0]).send(result[1]);
   } catch (err) {
     return res.status(400).send(`Erro ao registrar conta: ${ err }`);

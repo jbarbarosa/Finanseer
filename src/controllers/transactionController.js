@@ -1,4 +1,3 @@
-import findAccountBalanceService from "./services/account/findAccountBalanceService.js";
 import validateNewAccountBalanceService from "./services/account/validateNewAccountBalanceService.js";
 import changeTransactionStatusService from "./services/transaction/changeTransactionStatusService.js";
 import createNewTransactionService from "./services/transaction/createNewTransactionService.js";

@@ -5,11 +5,12 @@ export const authenticator = (req, res, next) => {
   if (!header) return res.status(401).send("Token não informado");
   const parts = header.split(' ');
   if (!parts.length === 2) return res.status(401).send("Token não formatado");
-  const [bearer, hash] = parts;
+  const [bearer, token] = parts;
   if (!/^Bearer$/i.test(bearer)) return res.status(401).send("Token disforme");
 
-  jwt.verify(hash, process.env.SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) return res.status(401).send({ error: 'Token invalido' });
+    console.log(decoded);
     req.id = decoded.id;
     return next();
   })

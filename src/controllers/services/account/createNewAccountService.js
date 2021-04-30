@@ -1,8 +1,8 @@
 import Account from "../../../models/accountModel.js";
 import User from "../../../models/userModel.js";
 
-const createNewAccountService = async (email, bankName, number) => {
-  const userDocument = await User.findOne({ email });
+const createNewAccountService = async (id, bankName, number) => {
+  const userDocument = await User.findById(id);
   if (!userDocument) return [404, 'Não foi possível localizar o usuário'];
   const { _id, firstName } = userDocument;
   const userId = _id;
