@@ -4,11 +4,9 @@ import findUserByEmail from './services/user/findUserByEmail.js';
 import { getToken } from '../middlewares/auth.js'
 
 export const createNewUser = async (req, res) => {
-  console.log(req.body);
   try {
     const { email } = req.body;
     const user = await findUserByEmail(email);
-    console.log(user);
     if (user) return res.status(400).send("Usuário já existe");
     const { password, firstName, lastName } = req.body;
     const result = await createNewUserService(email, password, firstName, lastName);

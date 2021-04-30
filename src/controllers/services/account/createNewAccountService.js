@@ -9,7 +9,7 @@ const createNewAccountService = async (id, bankName, number) => {
   const accountDocument = await Account.create({ bankName, userId, number });
   if (!accountDocument) return [400, 'Não foi possível criar uma nova conta'];
   const update = await User.updateOne({ _id: userId },{$push: {accounts:accountDocument}});
-  if (update.ok == 1) return [200, `Nova conta bancária criada para ${firstName}`];
+  if (update.ok == 1) return [200, { accountId : accountDocument._id }];
   return [400, 'Não foi possível vincular uma nova conta a este usuário'];
 }
 

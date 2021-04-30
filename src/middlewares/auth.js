@@ -10,7 +10,6 @@ export const authenticator = (req, res, next) => {
 
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     if (err) return res.status(401).send({ error: 'Token invalido' });
-    console.log(decoded);
     req.id = decoded.id;
     return next();
   })
