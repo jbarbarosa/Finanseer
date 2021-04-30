@@ -17,7 +17,6 @@ const findAccountBalanceService = async (accountId) => {
       { _id: accountTransactions },
       { isConfirmed: true }
     ]})
-  console.log(transactions)
   let balance = 0;
   transactions.map(transaction => {
     if (transaction.isInbound == true) {
