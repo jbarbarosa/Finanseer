@@ -1,4 +1,4 @@
-Uma API RESTful para o desafio UPlanner.
+Um projeto pessoal onde posso praticar meu conhecimento com a stack MERN.
 
 ### Baixar & utilizar localmente
 Crie um arquivo .env na raíz do projeto (fora de /src) com as variáveis PORT e MONGO_URI, e atribua a elas os valores desejados.
